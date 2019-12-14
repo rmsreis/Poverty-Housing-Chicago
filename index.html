@@ -1,8 +1,9 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset=utf-8 />
-<title>Loading markers from CSV</title>
+<title>KML Data</title>
 <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 <script src='https://api.mapbox.com/mapbox.js/v3.2.1/mapbox.js'></script>
 <link href='https://api.mapbox.com/mapbox.js/v3.2.1/mapbox.css' rel='stylesheet' />
@@ -14,22 +15,12 @@
 <body>
 <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>
 
-<div id='map'></div>
+<div id="map"></div>
+<div id='button'>Filter the points!</div>
 
-<script>
-L.mapbox.accessToken = 'pk.eyJ1IjoicHFtdXJwaHkiLCJhIjoiY2szdGY4YTFtMDI5MzNkbDdkM3U5dzJjMiJ9.Vu8FS4DCrXwhSzfHNkWCxQ';
-var map = L.mapbox.map('map')
-  .setView([41.8781, -87.6298], 12)
-  .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11'));
+<script type="text/javascript" src="Assets/jsconfig.js"></script>
 
-// Omnivore will AJAX-request this file behind the scenes and parse it:
-// note that there are considerations:
-// - The CSV file must contain latitude and longitude values, in column
-//   named roughly latitude and longitude
-// - The file must either be on the same domain as the page that requests it,
-//   or both the server it is requested from and the user's browser must
-//   support CORS.
-omnivore.kml('assets/data/Neighborhoods.kml').addTo(map);
-</script>
+<script src='Assets/js/logic.js'></script>
+
 </body>
 </html>
