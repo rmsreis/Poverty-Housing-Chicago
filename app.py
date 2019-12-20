@@ -28,7 +28,7 @@ Base = automap_base()
 Base.prepare(db.engine, reflect=True)
 
 # Save references to each table
-Samples = Base.classes.samples
+Housing_Data = Base.classes.housing_data
 
 
 @app.route("/")
@@ -37,16 +37,26 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/housing-data")
-def names():
+@app.route("/location")
+def location():
     """Return the full table."""
 
     # Use Pandas to perform the sql query
-    stmt = db.session.query(Samples).statement
-    df = pd.read_sql_query(stmt, db.session.bind)
+    sel = [
+        Housing_Data.Latitude,
+        Housing_Data.Longitude,
+    ]
 
-    # Return a list of the column names (sample names)
-    return jsonify(list(df.columns)[2:])
+    results = db.session.query(*sel).filter(Housing_Data.sample == housing_data).all()
+
+    # Create a dictionary entry for each row of metadata information
+    housing_data = {}
+    for result in results:
+        housing_data["Latitude"] = result[11]
+        housing_data["Longitude"] = result[12]
+
+    print(housing_data)
+    return jsonify(housing_data)
 
 
 # @app.route("/metadata/<sample>")
