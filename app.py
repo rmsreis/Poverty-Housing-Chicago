@@ -18,16 +18,16 @@ app = Flask(__name__)
 # Database Setup
 #################################################
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///housing_data.sqlite"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.sqlite"
 db = SQLAlchemy(app)
 
 # reflect an existing database into a new model
 Base = automap_base()
 
 # reflect the tables
-Base.prepare(db.engine, reflect=True)
+Base.prepare(engine, reflect=True)
 
-# Save references to each table
+# Save references to the table
 Housing_Data = Base.classes.housing_data
 
 
@@ -40,11 +40,10 @@ def index():
 @app.route("/location")
 def location():
     """Return the full table."""
-
     # Use Pandas to perform the sql query
     sel = [
-        Housing_Data.Latitude,
-        Housing_Data.Longitude,
+        Data.Latitude,
+        Data.Longitude,
     ]
 
     results = db.session.query(*sel).filter(Housing_Data.sample == housing_data).all()
