@@ -1,12 +1,10 @@
-import os
-
 import pandas as pd
 import numpy as np
 
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func, inspect, desc
 
 from flask import Flask, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
@@ -14,21 +12,16 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 
-#################################################
-# Database Setup
-#################################################
+#Setup database
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.sqlite"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///chicago.sqlite"
 db = SQLAlchemy(app)
 
-# reflect an existing database into a new model
 Base = automap_base()
+Base.prepare(db.engine, reflect=True)
 
-# reflect the tables
-Base.prepare(engine, reflect=True)
-
-# Save references to the table
-Housing_Data = Base.classes.housing_data
+Housing = Base.classes.housing
+Neighborhoods = Base.classes.neighborhoods
 
 
 @app.route("/")
@@ -36,79 +29,68 @@ def index():
     """Return the homepage."""
     return render_template("index.html")
 
+@app.route("/neighborhood/<area>")
+def neighborhood_data(area):
+
+    # Select columns from neighborhood table
+    sel =[Neighborhoods.CommunityAreaNumber,
+    Neighborhoods.COMMUNITYAREANAME,
+    Neighborhoods.PERCENTOFHOUSINGCROWDED,
+    Neighborhoods.PERCENTHOUSEHOLDSBELOWPOVERTY,
+    Neighborhoods.PERCAPITAINCOME,
+    Neighborhoods.HARDSHIPINDEX]
+
+    # Query for selected columns
+    results = db.session.query(*sel).filter(Neighborhoods.CommunityAreaNumber == area).all()
+
+    # Query units from housing table
+    # Query to find average of Chicago neighborhoods
+    if area == str(0):
+        results2 = db.session.query(func.sum(Housing.Units)).all()
+        units = round(results2[0][0] / 77, 0)
+    # Query for neighborhood
+    else:
+        results2 = db.session.query(func.sum(Housing.Units)).group_by(Housing.CommunityAreaNumber).filter(Housing.CommunityAreaNumber == area).all()
+        # Zero units if query returns an empty set
+        if results2 == []:
+            units = 0
+        else:
+            units = results2[0][0]
+
+    # Create a dictionary entry for each row of neighborhood data
+    nb_data = {}
+    for result in results:
+        nb_data["id"] = result[0]
+        nb_data["community"] = result[1]
+        nb_data["crowding"] = result[2]
+        nb_data["below_poverty"] = result[3]
+        nb_data["income"] = result[4]
+        nb_data["hardship_index"] = result[5]
+
+    nb_data["units"] = units
+
+    # Return dictionary as json
+    return jsonify(nb_data)
 
 @app.route("/location")
 def location():
     """Return the full table."""
     # Use Pandas to perform the sql query
     sel = [
-        Data.Latitude,
-        Data.Longitude,
+        Housing.Latitude,
+        Housing.Longitude,
     ]
 
-    results = db.session.query(*sel).filter(Housing_Data.sample == housing_data).all()
+    results = db.session.query(*sel).all()
 
     # Create a dictionary entry for each row of metadata information
     housing_data = {}
     for result in results:
-        housing_data["Latitude"] = result[11]
-        housing_data["Longitude"] = result[12]
+        housing_data["Latitude"] = result[0]
+        housing_data["Longitude"] = result[1]
 
-    print(housing_data)
+    # print(housing_data)
     return jsonify(housing_data)
-
-
-# @app.route("/metadata/<sample>")
-# def sample_metadata(sample):
-#     """Return the MetaData for a given sample."""
-#     sel = [
-#         Samples_Metadata.sample,
-#         Samples_Metadata.ETHNICITY,
-#         Samples_Metadata.GENDER,
-#         Samples_Metadata.AGE,
-#         Samples_Metadata.LOCATION,
-#         Samples_Metadata.BBTYPE,
-#         Samples_Metadata.WFREQ,
-#     ]
-
-#     results = db.session.query(*sel).filter(Samples_Metadata.sample == sample).all()
-
-#     # Create a dictionary entry for each row of metadata information
-#     sample_metadata = {}
-#     for result in results:
-#         sample_metadata["sample"] = result[0]
-#         sample_metadata["ETHNICITY"] = result[1]
-#         sample_metadata["GENDER"] = result[2]
-#         sample_metadata["AGE"] = result[3]
-#         sample_metadata["LOCATION"] = result[4]
-#         sample_metadata["BBTYPE"] = result[5]
-#         sample_metadata["WFREQ"] = result[6]
-
-#     print(sample_metadata)
-#     return jsonify(sample_metadata)
-
-
-# @app.route("/samples/<sample>")
-# def samples(sample):
-#     """Return `otu_ids`, `otu_labels`,and `sample_values`."""
-#     stmt = db.session.query(Samples).statement
-#     df = pd.read_sql_query(stmt, db.session.bind)
-
-#     # Filter the data based on the sample number and
-#     # only keep rows with values above 1
-#     sample_data = df.loc[df[sample] > 1, ["otu_id", "otu_label", sample]]
-
-#     # Sort by sample
-#     sample_data.sort_values(by=sample, ascending=False, inplace=True)
-
-#     # Format the data to send as json
-#     data = {
-#         "otu_ids": sample_data.otu_id.values.tolist(),
-#         "sample_values": sample_data[sample].values.tolist(),
-#         "otu_labels": sample_data.otu_label.tolist(),
-#     }
-#     return jsonify(data)
-
 
 if __name__ == "__main__":
     app.run()
