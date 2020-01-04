@@ -81,19 +81,25 @@ function buildCharts(area_id) {
 
       // Format layout
       layout = {
+        title: 'Affordable Housing Compared to Average Chicago Neighborhood',
+        font: {size: 12},
         polar: {
           radialaxis: {
             visible: true,
             range: [0,100]
           }
+        },
+        showlegend: true,
+        legend: {
+          x: 0.5,
+          y: -0.5
         }
+
       };
 
       // Create plotly plots
-      Plotly.newPlot("plot-id", plotData, layout);
+      Plotly.newPlot("plot-id", plotData, layout, {responsive: true});
 
     });
   });
 }
-
-buildCharts(63);
