@@ -7,12 +7,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func, inspect, desc
 
 from flask import Flask, jsonify, render_template
-from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-CORS(app)
-
 
 #Setup database
 
@@ -81,18 +78,24 @@ def location():
     sel = [
         Housing.Latitude,
         Housing.Longitude,
+        Housing.PropertyID
     ]
 
     results = db.session.query(*sel).all()
 
     # Create a dictionary entry for each row of metadata information
-    housing_data = {}
+    house_json = {}
     for result in results:
-        housing_data["Latitude"] = result[0]
-        housing_data["Longitude"] = result[1]
+        housing_data = {}
+        if result[0] is None:
+            continue
+        else:
+            housing_data["Latitude"] = result[0]
+            housing_data["Longitude"] = result[1]
+            house_json[result[2]] = housing_data
 
     # print(housing_data)
-    return jsonify(housing_data)
+    return jsonify(house_json)
 
 if __name__ == "__main__":
     app.run()

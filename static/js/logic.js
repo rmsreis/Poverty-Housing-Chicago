@@ -1,10 +1,13 @@
 L.mapbox.accessToken = 'pk.eyJ1IjoicHFtdXJwaHkiLCJhIjoiY2szdGY4YTFtMDI5MzNkbDdkM3U5dzJjMiJ9.Vu8FS4DCrXwhSzfHNkWCxQ';
-var map = L.mapbox.map("map", 'mapbox.streets');
-var afhous = "Assets/Data/points.csv";
+var map = L.mapbox.map("map", 'mapbox.streets', {
+    center: [41.881832, -87.623177],
+    zoom: 10.5
+});
+
 var zoomed = 0;
 
 // KML DATA
-var neighbounds = "Assets/Data/Boundaries - Community Areas (current).kml";
+var neighbounds = "static/Boundaries - Community Areas (current).kml"
 
 // Get Hardship
 function colorGrade(d) {
@@ -75,18 +78,14 @@ function zoomToFeature(e) {
         var hood = e.target.feature.properties.area_num_1;
         zoomed = 1;
         map.fitBounds(e.target.getBounds());
-        /// PLACE REDRAW FUNCTION HERE ///
         buildCharts(hood);
-        /// PLACE REDRAW FUNCTION HERE ///
     }
     else {
         // "hood" variable is used to indicate what the spider plot should draw //
         var hood = 0;
         zoomed = 0;
-        map.fitBounds(pts.getBounds());
-        /// PLACE REDRAW FUNCTION HERE ///
+        map.setView([41.881832, -87.623177], 10.5)
         buildCharts(hood);
-        /// PLACE REDRAW FUNCTION HERE ///
     }
 }
 
@@ -120,7 +119,7 @@ info.onAdd = function (map) {
 
 // method that we will use to update the control based on feature properties passed
 info.update = function (props) {
-    this._div.innerHTML = '<h4>Chicago Hardship Index</h4>' +  'Click within a neighborhood to'+ '<br> compare with citywide data. The' + '<br> points are Affordable Housing' + '<br> buildings.';
+    this._div.innerHTML = '<h4>Chicago Hardship Index</h4>' +  'Click within a neighborhood to'+ '<br> compare with citywide data. The' + '<br> points are affordable housing' + '<br> buildings.';
 };
 
 info.addTo(map);
@@ -145,10 +144,12 @@ legend.onAdd = function (map) {
 
 legend.addTo(map);
 
-// Plots the Affordable Housing Points //
-var pts = omnivore.csv(afhous);
+var URL = "/location";
 
-pts.on('ready', function() {
-    map.fitBounds(pts.getBounds());
-})
-.addTo(map);
+d3.json(URL).then(data => {
+
+    Object.entries(data).forEach(([key, value]) => {
+        var location = [value.Latitude, value.Longitude];
+        L.marker(location).addTo(map);
+    });
+});
