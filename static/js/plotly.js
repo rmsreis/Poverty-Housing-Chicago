@@ -1,9 +1,10 @@
 function buildCharts(area_id) {
 
   // Get url of chicago and selected neighborhood
-  var chiURL = "/neighborhood/0"
+  var chiURL = "/neighborhood/0";
   var URL = `/neighborhood/${area_id}`;
 
+  console.log(chiURL);
   // Create empty arrays
   var titles = [];
   var nbValues = [];
@@ -12,6 +13,8 @@ function buildCharts(area_id) {
   // Get json data from urls
   d3.json(chiURL).then(chiData => {
     d3.json(URL).then(nbData => {
+
+      console.log(nbData);
 
       // Add json data to arrays
       chiValues.push(chiData.hardship_index);
@@ -103,3 +106,5 @@ function buildCharts(area_id) {
     });
   });
 }
+
+buildCharts(0)
