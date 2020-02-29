@@ -2,7 +2,7 @@
 
 ### Description:
 
-We have explore how effective the city of Chicago has been in placing affordable housing in areas deemed of high poverty index since the 
+We explored how effective the city of Chicago has been in placing affordable housing in areas deemed of high poverty index since the 
 2008-2012 City of Chicago data.
 
 <b>Datasets were downloaded from:</b>
