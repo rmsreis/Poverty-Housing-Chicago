@@ -1,4 +1,5 @@
-# Poverty-Housing-Chicago
+## Poverty-Housing-Chicago
+----------------------
 
 ### Description:
 
@@ -26,6 +27,7 @@ For more information about affordable housing in Chicago:
 https://www.chicago.gov/city/en/depts/dcd/supp_info/affordable_rentalhousingresourcelist.html
 
 - <b> Tools used: </b>
+--------------------------
 
   Data ETL using Python/Jupyter Notebook
   Flask, SQLAlchemy, HTML, D3.js, Javascript, Heroku
