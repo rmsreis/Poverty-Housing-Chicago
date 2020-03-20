@@ -39,7 +39,8 @@ https://www.chicago.gov/city/en/depts/dcd/supp_info/affordable_rentalhousingreso
   A KML data of Chicago neighbourhoods is overlaid by default over the street map <a href="https://leafletjs.com/"> leaflet </a> of city 
   of Chicago. 
   
- - <b> Usage:</b>
+### Usage:
+---------
  
   The user may click within any of the neighbourhoods to filter the data shown in the dashboard to the selected neighbourhood. 
   
