@@ -1,7 +1,8 @@
-## Poverty-Housing-Chicago
+### Poverty-Housing-Chicago
+
 ----------------------
 
-### Description:
+**Description:**
 
 We explored how effective the city of Chicago has been in placing affordable housing in areas deemed of high poverty index since the 
 2008-2012 City of Chicago data.
