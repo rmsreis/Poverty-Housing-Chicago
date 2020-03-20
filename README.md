@@ -33,7 +33,8 @@ https://www.chicago.gov/city/en/depts/dcd/supp_info/affordable_rentalhousingreso
   Data ETL using Python/Jupyter Notebook
   Flask, SQLAlchemy, HTML, D3.js, Javascript, Heroku
 
-- <b> Data Visualization:</b>
+###  Data Visualization:
+-------
   
   A KML data of Chicago neighbourhoods is overlaid by default over the street map <a href="https://leafletjs.com/"> leaflet </a> of city 
   of Chicago. 
