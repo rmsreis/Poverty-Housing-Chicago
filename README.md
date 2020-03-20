@@ -27,7 +27,7 @@ https://data.cityofchicago.org/Facilities-Geographic-Boundaries/Boundaries-Neigh
 For more information about affordable housing in Chicago: 
 https://www.chicago.gov/city/en/depts/dcd/supp_info/affordable_rentalhousingresourcelist.html
 
-- <b> Tools used: </b>
+### Tools used:
 --------------------------
 
   Data ETL using Python/Jupyter Notebook
