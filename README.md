@@ -1,5 +1,5 @@
 ### Poverty-Housing-Chicago
-#### an Analysis of City of Chicago affordable housing planning
+#### <i> An Analysis of City of Chicago affordable housing planning</i>
 
 ----------------------
 
