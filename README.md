@@ -31,19 +31,19 @@ https://www.chicago.gov/city/en/depts/dcd/supp_info/affordable_rentalhousingreso
 ### Tools used:
 --------------------------
 
-  Data ETL using Python/Jupyter Notebook
+  - Data ETL using Python/Jupyter Notebook
   
-  Flask
+  - Flask
   
-  SQLAlchemy 
+  - SQLAlchemy 
   
-  HTML 
+  - HTML 
   
-  D3.js
+  - D3.js
   
-  Javascript
+  - Javascript
   
-  Heroku
+  - Heroku
 
 ###  Data Visualization:
 -------
